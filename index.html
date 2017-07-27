@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="jquery-1.7.1.min.js"></script>
+	<style type="text/css">
+		*{
+			margin:0;
+			padding:0;
+		}
+		ul,li,ol{
+			list-style: none;
+		}
+		a{
+			text-decoration: none;
+		}
+		.pre_banner {
+			height: 200px;
+			background: blue;
+		}
+		.empty-placeholder{
+			height:50px;
+		}
+		.hidden{
+			position: fixed;
+			top:0;
+			left:0;
+			z-index: 1000;
+		}
+		#subNav{
+			width: 100%;
+			background-color: #f7f7f7;
+			height:50px;
+		}
+		#subNav ul{
+			height:50px;
+			width:1200px;
+			margin:0 auto;
+			background-color: #fff;
+		}
+		#subNav ul li{
+			width: 19.5%;
+			float: left;
+			border-left:1px solid #f7f7f7;
+			height:50px;
+			line-height: 50px;
+			text-align: center;
+		}
+		#subNav ul li a{
+			color:#000;
+			font-size: 16px;
+			height: 50px;
+			width: 100%;
+			display: block;
+		}
+		#subNav .adv_active{
+			background-color: #97c740;
+			color:#fff;
+		}
+
+		#frist,#second,#third,#forth,#fifth{
+			margin-top: 50px;
+			height:400px;
+			width:1200px;
+			margin:0 auto;
+			text-align: center;
+			font-size: 20px;
+			line-height:400px;
+		}
+		#frist{
+			background-color: #71ff53;
+		}
+		#second{
+			background-color: #ffa7e8;
+		}
+		#third{
+			background-color: #529fff;
+		}
+		#forth{
+			background-color: #fbff95;
+		}
+		#fifth{
+			background-color: #bfa8ff;
+			height:800px;
+			line-height:800px;
+		}
+		.fixedSubNav{
+			position: fixed;
+			top:0;
+			left:0;
+			z-index:1000;
+		}
+	</style>
+</head>
+<body>
+	<div class="pre_banner"></div>
+	<div class="empty-placeholder hidden"></div>
+	<!--导航，这里一般是二级导航-->
+	<div id="subNav">
+		<ul class="wrap">
+			<li class="adv_active"><a href="#frist" class="adv_active adv_frist">第一部分</a></li>
+			<li><a href="#second" class="adv_second">第二部分</a></li>
+			<li><a href="#third" class="adv_third">第三部分</a></li>
+			<li><a href="#forth" class="adv_forth">第四部分</a></li>
+			<li><a href="#fifth" class="adv_fifth">第五部分</a></li>
+		</ul>
+	</div>
+	<div id="frist">第一部分</div>
+	<div id="second">第二部分</div>
+	<div id="third">第三部分</div>
+	<div id="forth">第四部分</div>
+	<div id="fifth">第五部分</div>
+</body>
+<script>
+    $(function () {
+        var subNav_active = $(".adv_active");
+        var subNav_scroll = function(target){
+            subNav_active.removeClass("adv_active");
+            target.parent().addClass('adv_active');
+            subNav_active = target.parent();
+        };
+        // <!--导航点击事件-->
+        $("#subNav a").click = function () {
+            subNav_scroll($(this));
+            var target = $(this).attr("href");
+            var targetScroll = $(target).offset().top-50;
+            $("html,body").animate({scrollTop:targetScroll},300);  //因为点击的的时候下面的主体部分是从窗口开始定位的，所以在实际中给每个子块加margin或padding.
+            return false;
+        };
+        //页面跳转时定位
+        if(window.location.hash){
+            var targetScroll = $(window.location.hash).offset().top-50;
+            $("html,body").animate({scrollTop:targetScroll},300);
+        }
+        //页面滚动时定位
+        $(window).scroll(function() {
+            var targetTop = $(this).scrollTop();
+            if (targetTop >= 200) {                            //上面东西的高度
+                $("#subNav").addClass("fixedSubNav");
+                $(".empty-placeholder").removeClass("hidden");
+            } else {
+                $("#subNav").removeClass("fixedSubNav");
+                $(".empty-placeholder").addClass("hidden");
+            }
+            if (targetTop < 600) {                             //banner的高+subnav的高
+                subNav_scroll($(".adv_frist"));
+            } else if (targetTop > 600 && targetTop < 1000) {
+                subNav_scroll($(".adv_second"));
+            } else if (targetTop > 1000 && targetTop < 1400) {
+                subNav_scroll($(".adv_third"));
+            } else if (targetTop > 1400 && targetTop < 1800) {
+                subNav_scroll($(".adv_forth"));
+            } else if (targetTop > 1800) {
+                subNav_scroll($(".adv_fifth"));
+            }
+        });
+    }());
+</script>
+</html>
